@@ -267,9 +267,30 @@ LOOPZ/LOOPE  opr
 LOOPNZ/LOOPNE	 opr
    执行时,(CX)←(CX)-1,若(CX)≠0且ZF=0则转移至opr
 ```
+### 子程序指令
+1. **call**：调用子程序，将断点入栈
+2. **ret**：退出子程序，将断点出栈
 
+### 中断指令
+1.**键盘单字符输入**  
+mov ah，01h  ;DOS功能号:键盘输入  
+int 21h      ;DOS调用  
+```
+执行时，等待键盘输入，键盘按下一键时，若为Contrl-Break键则退出，否则键入字符的ASCII码置入AL中，并在屏幕上显示出来
 
+```
+2.**键盘单字符输出**  
+MOV  DL，待显示字符的ASCII  
+MOV  AH，2  
+INT  21H  
+```
+入口：输出字符的ASCII 送 DL 
+```
 
+3. **返回操作系统**
+4CH号功能，使用方式为:  
+MOV AX,4C00H  
+INT   21H
 
 
 
