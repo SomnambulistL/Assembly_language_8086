@@ -116,6 +116,168 @@ ADD   reg/ mem ， reg/mem /imm
 格式：ADC   DST , SRC
 ADC reg/ mem ， reg/mem /imm   
 执行的操作：(DST)←(SRC)+(DST)+CF
+3. **inc**  
+格式：INC   OPR (reg/mem)
+执行的操作：(OPR)←(OPR)+1
+```
+操作数不能为立即数，常用于修改地址指针
+```
+4. **sub**  
+格式：SUB  DST , SRC
+SUB reg/ mem ， reg/mem /imm 
+执行的操作：(DST)←(DST)-(SRC)
+```
+src>dst，CF=1；否则CF=0
+```
+5. **sbb**  
+格式：SBB  DST , SRC
+SBB   reg/ mem ， reg/mem /imm
+```
+带借位，-cf
+```
+6. **dec**  
+格式：DEC  OPR（reg/mem）
+执行的操作：(OPR)←(OPR)-1
+
+7. **neg**  
+格式：NEG  OPR（reg/mem）求补
+
+8. **cmp**  
+格式：CMP   OPR1 , OPR2
+CMP   reg/ mem ， reg/mem /imm
+```
+1.该指令不保存运算结果，只是根据结果设置条件标志位。
+2.常和条件转移指令一同使用
+
+对于无符号数，符号位改变同sub  
+对于有符号数，符号位的改变如下：
+若OF XOR SF=0(OF=SF)，则目的数大于等于源数
+若OF XOR SF=1(OF≠SF)，则目的数小于源数 
+
+```
+9. **mul/imul**  
+格式：MUL  SRC（reg/mem)  
+执行的操作：
+字节操作数：(AX)←(AL)*(SRC)
+字操作数：(DX , AX)←(AX)*(SRC)
+10. **div/idiv**  
+格式：DIV  SRC（reg/mem）
+字节操作：(AL)←(AX)/(SRC)的商 (AH)←(AX)/(SRC)的余数  
+字操作：(AX)←(DX,AX)/(SRC)的商  (DX)←(DX,AX)/(SRC)的余数
+```
+除法运算和cbw，cwd配合使用
+```
+#### 类型转换指令
+1. **cbw**
+字节->字
+al的内容符号拓展到ah，形成字
+```
+若(AL)<80H,则(AH)=0;若(AL)>=80H,则(AH)=0FFH
+```
+2. **cwd**  
+字->双字
+ax的内容符号拓展到dx
+```
+执行的操作：AX的内容符号扩展到DX，形成DX，AX中的双字
+若(AX)<8000H，则(DX)=0；若 (AX)>=8000H，则(DX)=0FFFFH
+```
+
+### 位操作类指令 
+#### 逻辑运算指令
+1. **and** 按位与  
+2. **or** 按位或  
+3. **xor**按位异或  
+4. **test**逻辑与，但不保存结果  
+#### 逻辑移位指令
+1. **shl** 逻辑左移，补零
+2. **sal** 算数左移，补零
+3. **shr** 逻辑右移
+3. **sar** 算数右移，最高位为符号位保持不变
+4. **rcl** 和**rcr**连同cf一起循环移动
+
+#### 串处理指令
+串基本处理指令  
+1. **movs**  
+2. **lods**  
+3. **stos**  
+4. **cmps**  
+5. **scas**  
+
+与上述指令配合使用的前缀
+1. **rep**
+2. **repe/repz**
+3. **repne/repnz**
+
+```
+REP重复串操作直到CX内容为0为止,配合movs，lods，stos。每次执行后面的指令之前
+先判断cx是否为零，为否则cx减一，开始执行指令。cx递减不改变标志位
+```
+
+1. movs dst，src
+```
+dst为附加段中的 一组 数，src为数据断种的 一组 数
+movsb，movsw.操作数隐含为[es:di],[ds:si]
+使用之前要求：
+1. si中存源串数据地址，di中存目的串数据地址
+2. 数据串长度cx
+3. 建立方向标志
+```
+
+2. stos dest  
+源操作数隐含为al/ax，具体由dest确定  
+4. lods src
+同stos，功能相反  
+3.cmps
+要求同movs，功能[es:di]-[ds:si]  
+
+### 转移指令
+```
+1. 以单个标志位为条件 
+JO		opr	；溢出转移，OF=1
+JNO	opr	；不溢出转移,OF=0
+JS		opr	；结果为负转移,SF=1
+JNS	  opr	；结果为正转移,SF=0
+JC		opr	；进位转移,CF=1
+JNC	opr	；无进位转移,CF=0
+JE/JZ	opr	；相等或为零转移,ZF=1
+JNE/JNZ	 opr	；不相等或不为零转移,ZF=0
+JP/JPE	opr	；奇偶校验为偶转移,PF=1
+JNP/JPO opr	；奇偶校验为奇转移,PF=0 
+2. 无符号数比较 
+JA/JNBE opr	；大于时转移,CF=0∧ZF=0 
+JAE/JNB opr	；大于等于时移,CF=0∨ZF=1
+JB/JNAE opr	；小于时转移,CF=1∧ZF=0
+JBE/JNA opr	；小于等于时移,CF=1∨ZF=1
+3. 有符号数比较 
+JG/JNLE opr	；大于时转移,SF=OF∧ZF=0
+JGE/JNL	 opr	；大于等于时移,SF=OF∨ZF=1
+JL/JNGE	 opr	；小于时转移,SF≠OF∧ZF=0
+JLE/JNG	 opr	；小于等于时移,SF≠OF∨ZF=1 
+
+```
+
+### 循环指令
+```
+LOOP  opr	
+    执行(CX)←(CX)-1，若(CX)≠0则转移至符号地址opr
+
+LOOPZ/LOOPE  opr
+    执行(CX)←(CX)-1,若(CX)≠0且ZF=1则转移至opr
+
+LOOPNZ/LOOPNE	 opr
+   执行时,(CX)←(CX)-1,若(CX)≠0且ZF=0则转移至opr
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
