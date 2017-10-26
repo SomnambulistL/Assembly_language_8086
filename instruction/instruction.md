@@ -4,7 +4,8 @@
 # 目录
 * [寻址方式](#寻址方式)
 * [基本指令](#基本指令)
-    * [数据传送指令](#数据传送指令)
+    * [数据传送指令](#数据传送指令)  
+* [汇编语言格式](#汇编语言格式)
 ## 寻址方式
 寻址方式即为**指令中操作数的表示方式**
 1. 立即寻址
@@ -292,7 +293,40 @@ INT  21H  
 MOV AX,4C00H  
 INT   21H
 
+## 汇编语言格式
 
+### 格式
+
+#### 汇编语言程序的语句  
+[name] opration operand [;comment]  
+
+#### 伪操作
+[varialble] memonic operand,...operand [;comments]  
+
+memonic: 说明所用伪操作的助记符。说明数据类型  
+db 定义字节  dw 定义字  dd 定义双字  
+
+variable：变量，表示第一个字节的偏移地址。**后面不必加：**
+
+```
+字符串可以看做串常数，用单引号把字符串引起，得到的是ascii值  
+在定义字的时候低位在后面
+例：dw 'ab' b在0000h a就在0001h，b是低位字节
+但是db 'ab' a，b各为一个字节。按顺序分配内存，‘a’在0000h
+db ? 可以保留空间但不存入数据
+
+ repeat-count DUP(operand, … ,operand)
+可以复制操作
+```
+
+1. **label**  
+定义属性，
+对于数据项：variabl-name label type （byte，word，dword）  
+对于可执行代码：label-name label type（near，far）  
+2. **equ**  
+表达式赋值,但**不允许重复定义**  
+"="操作可以重复定义  
+3. **$地址计数器**  
 
 
 
