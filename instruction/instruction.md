@@ -359,6 +359,27 @@ type ptr expression  强制转换属性
                            ┆
     segname ENDS
 
+## 子程序
+### 过程定义伪操作
+proname **proc** attribute
+
+proname endp  
+其中attribute为near或者far  
+### 调用和返回
+1. **调用** 
+call
+```
+call near ptr subp 
+#ip压入堆栈
+call far ptr subp
+#cs ip压入堆栈
+```
+2. **返回**
+ret
+
+### 子程序的参数传递
+
+
 
 
 
