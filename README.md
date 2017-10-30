@@ -4,7 +4,7 @@
 ## 目录
 * [环境配置](#环境配置)
 * [8086简介](#8086简介)
-
+* [汇编笔记](#汇编笔记)
 ## 环境配置
 [Windows10下配置8086的汇编开发环境](http://blog.csdn.net/doniexun/article/details/45438457)
 
@@ -51,5 +51,5 @@ CS：代码段寄存器  
 SS：堆栈段寄存器  
 ES：附加段寄存器  
 
-## 指令笔记
+## 汇编笔记
 [指令笔记](./instruction/instruction.md)
