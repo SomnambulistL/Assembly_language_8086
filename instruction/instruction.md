@@ -288,9 +288,9 @@ INT  21H  
 入口：输出字符的ASCII 送 DL 
 ```
 3. **键盘多字符输入**  
-mov dx,数据区首偏移地址
-mov ah，0Ah
-int 21h
+mov dx,数据区首偏移地址  
+mov ah，0Ah  
+int 21h  
 ```
 数据区ibuf应在ds数据段中事先定义，其定义格式为
 ibuf db maxsize，0，size dup(?)
@@ -299,9 +299,9 @@ ibuf db maxsize，0，size dup(?)
 从第三个字节开始存放键入的字符ascii
 ```
 4. **字符串输出**  
-mov dx,数据区首偏移地址
-mov ah,09h
-int 21h
+mov dx,数据区首偏移地址  
+mov ah,09h  
+int 21h  
 ```
 入口：ds：dx置字符串首地址，字符串要以美元符号$结束
 ```
